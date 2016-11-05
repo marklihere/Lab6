@@ -6,8 +6,9 @@ void INIT_PLL(void) {
     SYSCTLb->RCC = (SYSCTLb->RCC &~0x000007C0) + 0x00000540;  // 16 MHz
     SYSCTLb->RCC2 &= ~0x00000070;  // Cfg for main OSC
     SYSCTLb->RCC2 &= ~0x00002000;  // activate PLL by clearing PWRDN
-    SYSCTLb->RCC2 |= 0x40000000;   // use 400 MHz PLL
-    SYSCTLb->RCC2 = (SYSCTLb->RCC2 & ~0x1FC00000) + (4<<22);  // 80 MHz
+    //SYSCTLb->RCC2 |= 0x40000000;   // use 400 MHz PLL   
+    SYSCTLb->RCC2 = (SYSCTLb->RCC2 & ~0x1FC00000) + (4<<23);  // 80 MHz
+	  //SYSCTLb->RCC2 = (SYSCTLb->RCC2 & ~0x1FC00000) + (9<<23);  // 40 MHz
     while((SYSCTLb->RIS & 0x00000040)==0){};  // Wait for PLL to lock
     SYSCTLb->RCC2 &= ~0x00000800;  // enable PLL by clearing bypass
 }
@@ -49,12 +50,12 @@ void INIT_SSI0(void) {
 	SSI0b->CR1 &= 0xFFFFFFFB;        // Set to Master mode
 	// Time for ludicrous speed
 	// 80 MHz SysClk SSIClk = SysClk / (CPSDVSR * (1 + SCR)) 
-	//               30 MHz = 80 MHz / (CPSDVSR * (1 + ))
+	//               20 MHz = 40 MHz / (CPSDVSR * (1 + ))
   // CPSDVSR from 2 to 254 (SSICPSR REG) SCR is a value from 0-255
-  // from above, 3 = (CPSDVSR * (1 + SCR)) = 1 * (1+SCR)
-	// we choose CPSDVSR = 1, then SCR = 2
+  // from above, 2 = (CPSDVSR * (1 + SCR)) = 2 * (1+SCR)
+	// we choose CPSDVSR = 1, then SCR = 3
 	// so CPSR = 0x02, SSI0->CR0 = 0x0107
-	SSI0b->CPSR = 0x01;             // see above
-	SSI0b->CR0  = 0x0307;           // see above
+	SSI0b->CPSR = 0x02;             // see above
+	SSI0b->CR0  = 0x0007;           // see above
 	SSI0b->CR1 |= 0x2;              // Enable SSI
 }
