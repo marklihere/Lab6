@@ -30,7 +30,7 @@ void GPIO_INIT(void) {
 		// PB[0] = Data/CMD Pin for LCD (LCD_RS)
 		GPIOB->DIR |= 0x01;          // PB[0] output
 		GPIOB->AFSEL |= 0x00;        // disable alt func on PB0
-		GPIOB->PDR |= 0x01;          // default to data Tx
+		GPIOB->PUR |= 0x01;          // default to data Tx
     GPIOB->DEN |= 0x01;          // enable digital I/O on PB0
 
 		// Port D
